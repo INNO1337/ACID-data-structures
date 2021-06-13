@@ -252,7 +252,7 @@ void operators_test(linked_list::List<int> &my_list) {
     linked_list::List<int>::Iterator iterator = my_list.begin();
     std::cout << "linked_list::List<int>::Iterator iterator = my_list.begin();\n";
     std::cout << "std::cout << *iterator << '\\n'; // " << *iterator << "\n";
-    if (*iterator == 1) {
+    if (*iterator) {
         std::cout << "====> TRUE <====\n";
     } else {
         std::cout << "====> FALSE <====\n";
@@ -264,12 +264,22 @@ void operators_test(linked_list::List<int> &my_list) {
 
 int main() {
     linked_list::List<int> my_list;
-    push_back_test(my_list);
-    pop_back_test(my_list);
-    push_front_test(my_list);
-    pop_front_test(my_list);
-    insert_test(my_list);
-    remove_test(my_list);
-    operators_test(my_list);
+//    push_back_test(my_list);
+//    pop_back_test(my_list);
+//    push_front_test(my_list);
+//    pop_front_test(my_list);
+//    insert_test(my_list);
+//    remove_test(my_list);
+//    operators_test(my_list);
+    my_list.push_back(5);
+    my_list.push_back(5);
+    my_list.push_back(5);
+    my_list.push_back(5);
+
+    auto iter = my_list.begin();
+
+    iter -= 100;
+
+
     return 0;
 }

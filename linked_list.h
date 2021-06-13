@@ -16,10 +16,6 @@ namespace linked_list {
 /**__________________________________________________________________________________________________________________**/
 /**----------------------------------------------DECLARATION---------------------------------------------------------**/
 /**^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^**/
-//    template<typename T>
-//    class Iterator;
-
-
     template<typename T>
     class List {
      public:
@@ -70,7 +66,7 @@ namespace linked_list {
 /**----------------------------------------------IMPLEMENTATION------------------------------------------------------**/
 /**^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^**/
 
-    template<typename T> ///Appends the given element value to the end of the container.
+    template<typename T>
     void List<T>::push_back(const T k) {
         size_++;
         auto tmp = new node<T>(k);
@@ -112,20 +108,21 @@ namespace linked_list {
             size_--;
             if (tail->prev) {
                 tail->prev->next = nullptr;
-                tail->prev->ref_counter--;
                 tail->ref_counter--;
-            } else if (!tail->prev) {
+            } else {
                 if (tail->ref_counter == 0) {
                     delete tail;
-                    head = nullptr;
-                    tail = nullptr;
                 }
+                head = nullptr;
+                tail = nullptr;
                 return;
             }
             auto tmp = tail;
             tail = tail->prev;
-            tmp->next = nullptr;
             if (tmp->ref_counter <= 0) {
+                if (tmp->prev) {
+                    tmp->prev->ref_counter--;
+                }
                 delete tmp;
             }
         }
@@ -139,22 +136,22 @@ namespace linked_list {
             size_--;
             if(head->next) {
                 head->next->prev = nullptr;
-                head->next->ref_counter--;
                 head->ref_counter--;
-            } else if (!head->next) {
+            } else {
                 if (head->ref_counter == 0) {
                     delete head;
-                    head = nullptr;
-                    tail = nullptr;
                 }
+                head = nullptr;
+                tail = nullptr;
                 return;
             }
             auto tmp = head;
             head = head->next;
-            tmp->next = nullptr;///
             if (tmp->ref_counter <= 0) {
+                if (tmp->next) {
+                    tmp->next->ref_counter--;
+                }
                 delete tmp;
-                tmp = nullptr;
             }
         }
     }
@@ -227,7 +224,7 @@ namespace linked_list {
 /**------------------------------------------------------------------------------------------------------------------**/
 
     template<typename T>
-    void List<T>::Iterator::remove() {
+    void List<T>::Iterator::remove() { ///Wanna some spaghetti?
         auto prev = cur->prev;
         auto next = cur->next;
 
@@ -240,25 +237,35 @@ namespace linked_list {
             cur->ref_counter--;
         }
         if (next) {
-            list->size_--;
-            if (!prev) {
-                next->ref_counter--;
+            if (list->size_ > 0) {
+                list->size_--;
             }
             release(cur);
             acquire(next);
             cur = next;
+            if (!cur->prev) {
+                list->head = cur;
+            }
         } else if (prev) {
-            list->size_--;
-            prev->ref_counter--;
+            if (list->size_ > 0) {
+                list->size_--;
+            }
             release(cur);
             acquire(prev);
             cur = prev;
+            if (!cur->next) {
+                list->tail = cur;
+            }
         } else {
             if (cur) {
-                list->size_--;
+                if (list->size_ > 0) {
+                    list->size_--;
+                }
                 release(cur);
             }
             cur = nullptr;
+            list->head = cur;
+            list->tail = cur;
         }
     }
 
@@ -278,7 +285,17 @@ namespace linked_list {
         if (p) {
             p->ref_counter--;
             if (p->ref_counter <= 0) {
-                delete p;
+                if (p->prev && p->next) {
+                    delete p;
+                } else if (p->prev) {
+                    p->prev->ref_counter--;
+                    delete p;
+                } else if (p->next) {
+                    p->next->ref_counter--;
+                    delete p;
+                } else {
+                    delete p;
+                }
             }
         }
     }
@@ -318,9 +335,6 @@ namespace linked_list {
             acquire(tmp);
             release(cur);
             cur = tmp;
-        } else {
-            release(cur);
-            cur = nullptr;
         }
         return *this;
     }
@@ -334,9 +348,6 @@ namespace linked_list {
             acquire(tmp);
             release(cur);
             cur = tmp;
-        } else {
-            release(cur);
-            cur = nullptr;
         }
         return *this;
     }
@@ -392,9 +403,6 @@ namespace linked_list {
             acquire(tmp);
             release(cur);
             cur = tmp;
-        } else {
-            release(cur);
-            cur = nullptr;
         }
         return *this;
     }
@@ -408,9 +416,6 @@ namespace linked_list {
             acquire(tmp);
             release(cur);
             cur = tmp;
-        } else {
-            release(cur);
-            cur = nullptr;
         }
         return *this;
     }

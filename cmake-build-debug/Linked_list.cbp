@@ -85,9 +85,6 @@
 		<Unit filename="/home/inno/CLionProjects/Linked_list/linked_list.h">
 			<Option target="Linked_list"/>
 		</Unit>
-		<Unit filename="/home/inno/CLionProjects/Linked_list/ll.h">
-			<Option target="Linked_list"/>
-		</Unit>
 		<Unit filename="/home/inno/CLionProjects/Linked_list/main.cpp">
 			<Option target="Linked_list"/>
 		</Unit>
