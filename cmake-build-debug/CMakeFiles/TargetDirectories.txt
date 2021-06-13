@@ -1,0 +1,3 @@
+/home/inno/CLionProjects/Linked_list/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/home/inno/CLionProjects/Linked_list/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/inno/CLionProjects/Linked_list/cmake-build-debug/CMakeFiles/Linked_list.dir
