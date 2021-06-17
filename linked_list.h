@@ -24,7 +24,13 @@ namespace linked_list {
         void push_front(T k);
         void pop_back();
         void pop_front();
+        T& front();
+        T& back();
         size_t size();
+        bool empty();
+        void clear();
+//        void swap(List<T> &other);
+        T& operator [] (const int index);
 
         class Iterator {
          friend class List;
@@ -197,6 +203,63 @@ namespace linked_list {
 /**------------------------------------------------------------------------------------------------------------------**/
 
     template<typename T>
+    T &List<T>::front() {
+        return head->key;
+    }
+
+    template<typename T>
+    T &List<T>::back() {
+        return tail->key;
+    }
+
+/**------------------------------------------------------------------------------------------------------------------**/
+
+    template<typename T>
+    bool List<T>::empty() {
+        return (size_ == 0 && head == nullptr && tail == nullptr);
+    }
+
+/**------------------------------------------------------------------------------------------------------------------**/
+
+    template<typename T>
+    void List<T>::clear() {
+        while (!empty()) {
+            pop_front();
+        }
+    }
+
+/**------------------------------------------------------------------------------------------------------------------**/
+
+    template<typename T>
+    T &List<T>::operator[](const int index) {
+        auto iter = begin();
+        if (index >= 0) {
+            iter += index;
+        } else {
+            iter += size();
+            iter += index + 1;
+        }
+        return *iter;
+    }
+
+/**------------------------------------------------------------------------------------------------------------------**/
+
+//    template<typename T>
+//    void List<T>::swap(List<T> &other) {
+//        node<T> *head_tmp = head;
+//        node<T> *tail_tmp = tail;
+//        size_t size_tmp = size_;
+//        head = other.head;
+//        tail = other.tail;
+//        other.head = head_tmp;
+//        other.tail = tail_tmp;
+//        size_ = other.size_;
+//        other.size_ = size_tmp
+//    }
+
+/**------------------------------------------------------------------------------------------------------------------**/
+
+    template<typename T>
     void List<T>::Iterator::move(int n) {
         if (n < 0) {
             while (n < 0) {
@@ -294,6 +357,11 @@ namespace linked_list {
                     p->next->ref_counter--;
                     delete p;
                 } else {
+                    if (list->tail == list->head && list->head == p && list->size() == 1) {
+                        list->size_--;
+                        list->tail = nullptr;
+                        list->head = nullptr;
+                    }
                     delete p;
                 }
             }
